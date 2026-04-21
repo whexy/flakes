@@ -24,6 +24,4 @@ nix flake init -t github:whexy/flakes#jupyter
 ### Development
 
 - Typst sertup (`#typst`)
-- Rust setup (`#rust`)
-- Zig setup (`#zig`)
 - Jupyter notebook setup (`#jupyter`)
