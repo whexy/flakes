@@ -16,8 +16,7 @@
     inputs.blueprint {
       inherit inputs;
       prefix = "nix";
-      # Uncomment the following lines to enable CUDA support for PyTorch:
+      # Uncomment the following line to enable GPU acceleration (CUDA/ROCm):
       # nixpkgs.config.allowUnfree = true;
-      # nixpkgs.config.cudaSupport = true;
     };
 }
