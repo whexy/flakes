@@ -10,6 +10,8 @@ let
     ps.torch
     ps.graphviz
     ps.tqdm
+    ps.jupyterlab-lsp
+    ps.python-lsp-server
   ];
 
   # When cudaSupport / rocmSupport is enabled in flake.nix the nixpkgs instance
@@ -46,7 +48,18 @@ pkgs.mkShell {
     pkgs.graphviz
   ];
 
-  env = { };
+  env = {
+    # Prepend project-local Jupyter config to the search path so that
+    # jupyter-lsp picks up pylsp instead of an auto-detected basedpyright
+    # from ~/.nix-profile.  Using CONFIG_PATH (not CONFIG_DIR) keeps
+    # ~/.jupyter as the primary writable config directory.
+    JUPYTER_CONFIG_PATH = "${./jupyter}";
+
+    # Absolute path to the Nix Python interpreter that has torch, numpy,
+    # etc.  Used by jupyter_server_config.py to launch pylsp inside the
+    # correct environment regardless of what else is on $PATH.
+    JUPYTER_PYLSP_PYTHON = "${python}/bin/python";
+  };
 
   shellHook = ''
     ${if pkgs.config.cudaSupport then cudaDriverHook else ""}
