@@ -7,7 +7,9 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable-cuda";
+    # Tracks nixos-unstable-small at revisions the CUDA Hydra has built,
+    # so torch with CUDA is available from cache.nixos-cuda.org.
+    nixpkgs.url = "github:nixos-cuda/nixpkgs?ref=nixos-unstable-cuda";
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
     treefmt.url = "github:numtide/treefmt-nix";
@@ -18,11 +20,21 @@
 
   outputs =
     inputs:
+    let
+      # ── GPU mode ──────────────────────────────────────────────────────
+      # Change this single line to switch GPU backend:
+      #   "cuda"  – NVIDIA  (binary cache: cache.nixos-cuda.org)
+      #   "rocm"  – AMD     (binary cache: cache.nixos.org)
+      #   null    – CPU only
+      gpu = null;
+    in
     inputs.blueprint {
       inherit inputs;
       prefix = "nix";
-      # Uncomment the following line to enable GPU acceleration (CUDA/ROCm):
-      # nixpkgs.config.cudaSupport = true
-      # nixpkgs.config.allowUnfree = true;
+      nixpkgs.config = {
+        cudaSupport = gpu == "cuda";
+        rocmSupport = gpu == "rocm";
+        allowUnfree = gpu != null;
+      };
     };
 }
