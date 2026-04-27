@@ -3,30 +3,16 @@ let
   pre-commit-check = import ./checks/pre-commit-check.nix { inherit inputs pkgs; };
 
   pythonPackages = ps: [
-    ps.jupyterlab
-    ps.jupyterlab-vim
-    ps.numpy
-    ps.matplotlib
     ps.torch
-    ps.graphviz
-    ps.tqdm
-    ps.jupyterlab-lsp
-    ps.python-lsp-server
   ];
 
-  # When cudaSupport / rocmSupport is enabled in flake.nix the nixpkgs instance
-  # already builds torch against the selected GPU backend.  For CUDA this matches
-  # the builds on cache.nixos-cuda.org, so torch is fetched from the binary cache
-  # instead of being compiled from source.
   python = pkgs.python3.withPackages pythonPackages;
 
-  # ── NVIDIA driver shim (non-NixOS only) ────────────────────────────
-  # On NixOS, libcuda.so.1 is already available via /run/opengl-driver/lib
-  # (baked into the torch RPATH by addDriverRunpath).  On non-NixOS the host
-  # NVIDIA driver libraries live alongside the system libc, so we can't just
-  # add that directory to LD_LIBRARY_PATH without glibc symbol conflicts.
-  # Instead, create a temporary directory that symlinks only the NVIDIA driver
-  # libraries we need.
+  runtimeLibs = pkgs.lib.makeLibraryPath [
+    pkgs.stdenv.cc.cc.lib # libstdc++
+    pkgs.zlib
+  ];
+
   cudaDriverHook = ''
     if [ ! -e "${pkgs.addDriverRunpath.driverLink}/lib/libcuda.so.1" ]; then
       __cuda_driver_dir="$(mktemp -d /tmp/nix-cuda-driver.XXXXXX)"
@@ -46,23 +32,23 @@ pkgs.mkShell {
   packages = [
     python
     pkgs.graphviz
+    pkgs.uv
   ];
 
-  env = {
-    # Prepend project-local Jupyter config to the search path so that
-    # jupyter-lsp picks up pylsp instead of an auto-detected basedpyright
-    # from ~/.nix-profile.  Using CONFIG_PATH (not CONFIG_DIR) keeps
-    # ~/.jupyter as the primary writable config directory.
-    JUPYTER_CONFIG_PATH = "${./jupyter}";
-
-    # Absolute path to the Nix Python interpreter that has torch, numpy,
-    # etc.  Used by jupyter_server_config.py to launch pylsp inside the
-    # correct environment regardless of what else is on $PATH.
-    JUPYTER_PYLSP_PYTHON = "${python}/bin/python";
-  };
+  env.LD_LIBRARY_PATH = runtimeLibs;
 
   shellHook = ''
     ${if pkgs.config.cudaSupport then cudaDriverHook else ""}
     ${pre-commit-check.shellHook}
+
+    export UV_PYTHON_DOWNLOADS=never
+    if [ ! -d .venv ]; then
+      uv venv --python "$(which python)" --system-site-packages
+    fi
+    source .venv/bin/activate
+    uv pip install --quiet -r requirements.txt
+
+    export JUPYTER_CONFIG_PATH="${./jupyter}"
+    export JUPYTER_PYLSP_PYTHON="$(which python)"
   '';
 }

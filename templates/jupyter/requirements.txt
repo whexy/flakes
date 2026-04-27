@@ -1,0 +1,15 @@
+# Jupyter
+jupyterlab
+ipykernel
+jupyterlab-lsp
+jupyterlab-vim
+jupyter-ai
+
+# Python tools
+python-lsp-server
+tqdm
+
+# Scientific
+numpy
+matplotlib
+graphviz
