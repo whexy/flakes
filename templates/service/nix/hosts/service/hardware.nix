@@ -14,6 +14,8 @@
     loader.systemd-boot.enable = lib.mkDefault true;
     loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
+    growPartition = true;
+
     initrd.availableKernelModules = [
       "uhci_hcd"
       "ehci_pci"
@@ -30,13 +32,5 @@
 
   services.qemuGuest.enable = true;
 
-  fileSystems."/" = lib.mkDefault {
-    device = "/dev/disk/by-label/NIXROOT";
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = lib.mkDefault {
-    device = "/dev/disk/by-label/NIXBOOT";
-    fsType = "vfat";
-  };
+  fileSystems."/".autoResize = true;
 }
