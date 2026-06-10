@@ -1,5 +1,5 @@
 {
-  description = "NixOS service template (systemd-based, with agenix + disko + home-manager)";
+  description = "NixOS service template (systemd-based, with agenix + home-manager)";
 
   nixConfig = {
     extra-substituters = [
@@ -16,8 +16,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
