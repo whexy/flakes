@@ -7,6 +7,7 @@
 {
   imports = [
     ./hardware.nix
+    ./disko.nix
     inputs.agenix.nixosModules.default
   ];
 
