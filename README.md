@@ -40,7 +40,8 @@ nix flake init -t github:whexy/flakes#jupyter
 
 ### Service
 
-- TODO
+- Service server (`#service`)
+- GPU service server (`#gpu-service`)
 
 ### Development
 
