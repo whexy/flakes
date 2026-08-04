@@ -1,8 +1,7 @@
 { flake, pkgs, ... }:
 let
   nixos = flake.nixosConfigurations.service;
-  image = nixos.config.system.build.image;
-  metadata = nixos.config.system.build.metadata;
+  inherit (nixos.config.system.build) image metadata;
 in
 pkgs.runCommand "nixos-gpu-container" { } ''
   mkdir -p $out

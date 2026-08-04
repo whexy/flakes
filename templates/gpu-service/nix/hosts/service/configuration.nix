@@ -41,9 +41,11 @@
     ];
   };
 
-  programs.zsh.enable = true;
-  programs.vim.enable = true;
-  programs.nix-ld.enable = true;
+  programs = {
+    zsh.enable = true;
+    vim.enable = true;
+    nix-ld.enable = true;
+  };
 
   networking.networkmanager.enable = true;
   networking.hostName = "service";
