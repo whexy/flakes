@@ -7,6 +7,8 @@ inputs.git-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
   hooks = {
     nil.enable = true;
     statix.enable = true;
+    deadnix.enable = true;
+    typos.enable = true;
     treefmt = {
       enable = true;
       package = treefmtEval.config.build.wrapper;

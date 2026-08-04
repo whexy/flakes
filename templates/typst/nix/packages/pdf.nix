@@ -1,5 +1,5 @@
 # PDF output
-# This package use typst to build the PDF.
+# This package uses Typst to build the PDF.
 
 {
   pkgs,

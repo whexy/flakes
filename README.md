@@ -45,5 +45,5 @@ nix flake init -t github:whexy/flakes#jupyter
 
 ### Development
 
-- Typst sertup (`#typst`)
+- Typst project setup (`#typst`)
 - Jupyter notebook setup (`#jupyter`)

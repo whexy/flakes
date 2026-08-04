@@ -12,19 +12,18 @@ pkgs.mkShell {
   packages = [
     perSystem.self.typst
     perSystem.self.tinymist
-    pkgs.zathura
+    pkgs.sioyek # PDF reader with Vim keybindings and automatic reloads
     treefmtEval.config.build.wrapper
   ];
 
   shellHook = ''
     ${pre-commit-check.shellHook}
-
-    echo "Dissertation dev shell ready."
+    echo "Typst dev shell ready."
     echo "  $(typst --version)"
     echo "  tinymist $(tinymist --version 2>/dev/null | head -1 || echo installed)"
     echo ""
     echo "  Compile:  typst compile src/main.typ main.pdf"
     echo "  Watch:    typst watch src/main.typ main.pdf"
-    echo "  Preview:  zathura main.pdf &"
+    echo "  Preview:  sioyek main.pdf &"
   '';
 }

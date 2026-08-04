@@ -1,12 +1,12 @@
 { pkgs, perSystem, ... }:
 let
+  # typst.withPackages transitively includes each package's typstDeps through
+  # propagatedBuildInputs, so package dependencies are cached automatically.
   typstWithPackages = pkgs.typst.withPackages (p: [
-    p.cetz # Drawing, diagrams, plots            (cetz:0.4.2)
-    p.tablex # Extended table layout                (tablex:0.0.9)
-    p.fletcher # Commutative diagrams / flowcharts    (fletcher:0.5.8)
-    # Transitive dependencies that withPackages does not cache automatically:
-    p.cetz_0_3_4 # fletcher:0.5.8 internally imports @preview/cetz:0.3.4
-    p.oxifmt_0_2_1 # cetz:0.3.4 depends on @preview/oxifmt:0.2.1
+    p.cetz # Drawing, diagrams, plots
+    p.tablex # Extended table layout
+    p.fletcher # Commutative diagrams and flowcharts
+    p.touying # Presentation slides
   ]);
 in
 pkgs.symlinkJoin {

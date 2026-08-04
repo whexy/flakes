@@ -1,0 +1,18 @@
+# Spell-checking configuration for the `typos` pre-commit hook.
+
+[default]
+# DOIs and URLs frequently trigger false positives.
+extend-ignore-re = [
+  "https?://\\S+",
+  "doi\\.org/\\S+",
+]
+
+[default.extend-words]
+# Typst ecosystem and tool names.
+cetz = "cetz"
+fletcher = "fletcher"
+tablex = "tablex"
+tinymist = "tinymist"
+touying = "touying"
+typst = "typst"
+typstyle = "typstyle"

@@ -1,8 +1,8 @@
 {
-  description = "Typst setup";
+  description = "Typst project";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-26.05";
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
     treefmt.url = "github:numtide/treefmt-nix";
@@ -15,7 +15,7 @@
     inputs:
     inputs.blueprint {
       inherit inputs;
-      prefix = "nix";
-      nixpkgs.config.allowUnfree = true; # allow fonts
+      prefix = "nix/";
+      nixpkgs.config.allowUnfree = true; # Required by corefonts
     };
 }
